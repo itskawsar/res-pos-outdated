@@ -46,7 +46,7 @@ if(isset($_SESSION['section']) && $_SESSION['section']!="admin"){
 header ("Expires: " . gmdate("D, d M Y H:i:s", time()) . " GMT");
 header ("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 
-if(!$link = @mysql_pconnect ($cfgserver, $cfguser, $cfgpassword)) {
+if(!$link = @mysqli_connect ($cfgserver, $cfguser, $cfgpassword)) {
 	die('Error connecting to the db');
 }
 

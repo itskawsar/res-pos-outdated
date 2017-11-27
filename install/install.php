@@ -208,7 +208,7 @@ elseif ($page == 5) {
 		if ( ! $DB->db_connect(0)) {
 			$errors[] = "Unable to connect to your database server. ";
 			
-			if ($data['db_conntype'] == 1) {
+			if ($data['db_conntype'] == 0) {
 				$errors[] = "Try switching to a non-persistent connection since some servers do not support persistent connections.";
 			}
 		}
@@ -218,7 +218,7 @@ elseif ($page == 5) {
 		}
 
 		// Check for "strict mode", some queries used are incompatible
-		if ($DB->conn_id !== FALSE && version_compare(mysql_get_server_info(), '4.1-alpha', '>=') !== FALSE) {
+		if ($DB->conn_id !== FALSE && version_compare(mysqli_get_server_info($DB->conn_id), '4.1-alpha', '>=') !== FALSE) {
 			$mode_query = $DB->query("SELECT CONCAT(@@global.sql_mode, @@session.sql_mode) AS sql_mode");
 	
 			if (strpos(strtoupper($mode_query->row['sql_mode']), 'STRICT') !== FALSE) {

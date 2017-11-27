@@ -88,7 +88,7 @@ class DB {
     /**  Constructor
     /** ---------------------------------------*/
 
-    function DB($settings)
+    function __construct($settings)
     {
         global $PREFS;
         
@@ -128,7 +128,7 @@ class DB {
     {    
 		if (function_exists('mysql_ping'))
 		{
-			if (mysql_ping($this->conn_id) === FALSE)
+			if (mysqli_ping($this->conn_id) === FALSE)
 			{
 				$this->conn_id = FALSE;
 			}
@@ -144,8 +144,8 @@ class DB {
     function db_connect($select_db = TRUE)
     {    
         $this->conn_id = ($this->conntype == 0) ?
-          @mysql_connect ($this->hostname, $this->username, $this->password):
-          @mysql_pconnect($this->hostname, $this->username, $this->password);
+          @mysqli_connect ($this->hostname, $this->username, $this->password):
+          @mysqli_pconnect($this->hostname, $this->username, $this->password);
         
         if ( ! $this->conn_id)
         {            
@@ -160,7 +160,7 @@ class DB {
 			}
         }
         
-        $this->server_info = @mysql_get_server_info();
+        $this->server_info = @mysqli_get_server_info($this->conn_id);
         
         return TRUE;
     }
@@ -173,7 +173,13 @@ class DB {
 
     function select_db()
     {
-        if ( ! @mysql_select_db($this->database, $this->conn_id))
+        // echo "<pre>";
+        // print_r($this->database);
+        // echo "<hr>";
+        // print_r($this->conn_id);
+        // echo "</pre>";
+        // exit;
+        if ( ! @mysqli_select_db($this->conn_id, $this->database))
         {            
             return FALSE;
         }
@@ -190,7 +196,7 @@ class DB {
     function db_close()
     {
         if ($this->conn_id)
-            mysql_close($this->conn_id);
+            mysqli_close($this->conn_id);
     }         
     /* END */
     
@@ -318,7 +324,7 @@ class DB {
 
         // Execute the query
                 
-        if ( ! $this->query_id = mysql_query($sql, $this->conn_id))
+        if ( ! $this->query_id = mysqli_query($this->conn_id, $sql))
         {
             if ($this->debug)
             {
@@ -341,11 +347,11 @@ class DB {
         {
             if (preg_match("^$type^", $sql))
             {  
-                $this->affected_rows = mysql_affected_rows($this->conn_id);
+                $this->affected_rows = mysqli_affected_rows($this->conn_id);
                 
                 if ($type == 'INSERT' || $type == 'REPLACE')
                 {
-                    $this->insert_id = mysql_insert_id($this->conn_id);
+                    $this->insert_id = mysqli_insert_id($this->conn_id);
                 }
                 
                 // Delete the cache file since the data in it is no longer current.
@@ -374,7 +380,7 @@ class DB {
         { 
             $this->field_names = array();
             
-            while ($field = mysql_fetch_field($this->query_id))
+            while ($field = mysqli_fetch_field($this->query_id))
             {
                 $this->field_names[] = $field->name;       
             }
@@ -386,7 +392,7 @@ class DB {
 
         $i = 0;
         $result = array();
-        while ($row = mysql_fetch_array($this->query_id, MYSQL_ASSOC)) 
+        while ($row = mysqli_fetch_array($this->query_id, MYSQLI_ASSOC)) 
         {                                    
             $result[$i] = $row;
             $i++;
@@ -394,7 +400,7 @@ class DB {
         
         // Free the result.  Optional with MySQL, but might as well be thorough
         
-        mysql_free_result($this->query_id);
+        mysqli_free_result($this->query_id);
 
         // Instantiate the cache super-class and assign the data 
         // to it if a subsequent query hasn't already done so
@@ -641,11 +647,11 @@ class DB {
 
 		if (function_exists('mysql_real_escape_string') AND is_resource($this->conn_id))
 		{
-			$str =  mysql_real_escape_string(stripslashes($str), $this->conn_id);
+			$str =  mysqli_real_escape_string(stripslashes($str), $this->conn_id);
 		}
 		elseif (function_exists('mysql_escape_string'))
     	{
-			$str = mysql_escape_string(stripslashes($str));
+			$str = mysqli_escape_string(stripslashes($str));
 		}
 		else
 		{
@@ -687,9 +693,9 @@ class DB {
         if ($id) 
         { 
             $msg .= "<br /><br />";
-            $msg .= "Error Number: " . mysql_errno($id);
+            $msg .= "Error Number: " . mysqli_errno($id);
             $msg .= "<br /><br />";
-            $msg .= "Description: "  . mysql_error($id);
+            $msg .= "Description: "  . mysqli_error($id);
         }
         
         if ($sql)

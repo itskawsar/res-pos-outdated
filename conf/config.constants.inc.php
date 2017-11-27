@@ -218,8 +218,7 @@ define('IMAGE_DISH_DEFAULT',CONF_HTTP_ROOT_DIR."images/pos/dish.png");
 
 //waiter images
 define('IMAGE_LITTLE_TRASH',CONF_HTTP_ROOT_DIR."images/waiter/little_trash.png");
-define('IMAGE_CLOSE',CONF_HTTP_ROOT_DIR."images/waiter/fileclose.png");
-
+defined('IMAGE_CLOSE') or define('IMAGE_CLOSE',CONF_HTTP_ROOT_DIR."images/waiter/fileclose.png");
 
 // all the colors used in background and tables
 

@@ -27,7 +27,7 @@
  * @copyright		Copyright 2003-2005, Fabio De Pascale
  * @copyright	Copyright 2006-2012, Gjergj Sheldija
  */
-define('ROOTDIR','..');
+defined('ROOTDIR') or define('ROOTDIR','..');
 
 function categories_printed ($sourceid,$category) {
 	$catprinted=array();
