@@ -72,7 +72,7 @@ Allow editing of only non-PHP code elements -
 
 
 */
-class Translator extends Controller {
+class Translator extends CI_Controller {
 
 	/*------------- Start Configuration -------------*/
 
@@ -169,7 +169,7 @@ class Translator extends Controller {
 	 * @return void
 	 */
 	function __construct() {
-		parent::Controller();	
+		parent::__construct();	
 		$this->load->helper(array('form', 'url', 'file', 'html','language' ));
 		$this->langDirs = array( BASEPATH . 'language', APPPATH . 'language' );
 		$this->data[ 'postUniquifier' ] = $this->postUniquifier;

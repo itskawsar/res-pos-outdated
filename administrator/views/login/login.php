@@ -59,6 +59,9 @@
 				<label for="language" class="desc"><?php echo lang('language') ;?>:</label>
 				<div><select name="language" class="field select large"><?php echo $langDropDown;?></select></div>	
 			</li>
+			<li>
+				<input type="submit" value="Submit">
+			</li>
 		</ul>
 	</form>
 </div>
